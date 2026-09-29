@@ -1,113 +1,43 @@
-# NEXUS — Master 19-Phase Roadmap
+# NEXUS TITAN — 20-Phase Master Development Roadmap
 
-**Current Active Phase:** Phase 1 — Project Foundation & Master Specification  
-**Version:** 1.0.0  
-**Last Updated:** Phase 1 Completion  
+**Project:** NEXUS TITAN — AI Systems, Runtime & High-Performance Computing Laboratory  
+**Current Active Phase:** Phase 1 — Repository & Development Foundation  
 
 ---
 
-## Phase Overview & Progression Status
+## Master Phase Progression
 
-| Phase # | Phase Title | Status | Primary Focus |
+| Phase # | Phase Title | Status | Scope & Deliverables |
 |---|---|---|---|
-| **01** | **Project Foundation & Specification** | 🟢 Completed | Master spec, architecture baseline, ADRs, runnable seed |
-| **02** | **Repository & Development Environment** | ⏳ Next | Containerized local DB, linting, formatting, pre-commit hooks |
-| **03** | **System Architecture Refinement** | ⚪ Planned | In-depth module boundaries, port/adapter interfaces, event bus design |
-| **04** | **Database & Data Model Foundation** | ⚪ Planned | PostgreSQL schema, Drizzle ORM setup, initial migrations, RLS |
-| **05** | **Backend & API Foundation** | ⚪ Planned | Route middleware, rate limiting, OpenAPI/Swagger generator |
-| **06** | **Authentication & Authorization** | ⚪ Planned | Identity model, Argon2 hashing, JWT/sessions, RBAC permissions |
-| **07** | **Core Business Modules** | ⚪ Planned | First domain vertical, business rules, transactional services |
-| **08** | **Frontend & Application Shell** | ⚪ Planned | React + Vite UI shell, design system tokens, responsive layout |
-| **09** | **Core User Workflows** | ⚪ Planned | End-to-end user journeys connecting frontend to core business API |
-| **10** | **AI & Automation Capabilities** | ⚪ Planned | Abstracted AI Gateway, intelligent workflows, prompt orchestration |
-| **11** | **Search, Analytics, and Intelligence** | ⚪ Planned | Full-text search, faceted filtering, operational metrics dashboard |
-| **12** | **Security & Privacy Hardening** | ⚪ Planned | OWASP verification, secret scanning, audit event trails, CSP |
-| **13** | **Comprehensive Testing Suite** | ⚪ Planned | Expanded unit, integration, and Playwright E2E test suites |
-| **14** | **Observability & Reliability** | ⚪ Planned | OpenTelemetry tracing, Prometheus metrics exporter, alerting |
-| **15** | **Performance & Scalability** | ⚪ Planned | Database query indexing, caching layer (Redis), load testing |
-| **16** | **Deployment & Infrastructure** | ⚪ Planned | Dockerfile, container optimization, CI/CD pipeline definition |
-| **17** | **Production Hardening** | ⚪ Planned | Disaster recovery, secret rotation, zero-downtime deployment plan |
-| **18** | **Documentation & Developer Portal** | ⚪ Planned | Developer guides, API reference docs, architecture diagrams |
-| **19** | **Final System Validation** | ⚪ Planned | Comprehensive smoke testing, audit signoff, release readiness |
+| **00** | **Engineering Constitution** | 🟢 Completed | Core principles (No Fake Performance, No Fake AI, CPU fallback, safety, measurement). |
+| **01** | **Repository & Development Foundation** | 🟡 In Progress | Multi-language monorepo (C++20, Python, TypeScript), CMake, Docker, hardware probe, CI. |
+| **02** | **AI Runtime Foundation** | ⚪ Planned | Central AI Runtime, request schemas, telemetry pipeline, token & latency tracking. |
+| **03** | **LLM Gateway** | ⚪ Planned | Provider abstraction (Remote, Local, Mock), model routing, streaming interfaces. |
+| **04** | **RAG Engine** | ⚪ Planned | Ingestion, chunking, embeddings, hybrid retrieval (BM25 + vector), reranker, citations. |
+| **05** | **Tool Calling & Agent Runtime** | ⚪ Planned | Explicit agent state machine, tool permissions, execution loop, human-in-the-loop. |
+| **06** | **AI Evaluation** | ⚪ Planned | Retrieval benchmarks (Recall@K, MRR, nDCG), groundedness checks, hallucination scoring. |
+| **07** | **AI Security** | ⚪ Planned | Prompt injection defenses, untrusted RAG document sanitization, adversarial test suite. |
+| **08** | **MLOps Infrastructure** | ⚪ Planned | Experiment tracking, dataset versioning, model registry, deployment metadata. |
+| **09** | **Process & Thread Runtime** | ⚪ Planned | C++ process supervisor (`fork`, `exec`, signals) and production-grade thread pool. |
+| **10** | **CPU Scheduling & Synchronization** | ⚪ Planned | FCFS, SJF, SRTF, RR, MLFQ simulators + Mutex, Semaphore, Condition Variable, Peterson's. |
+| **11** | **Memory & Virtual Memory** | ⚪ Planned | Custom free-list allocator (fragmentation metrics) + Paging simulator (FIFO, LRU, Optimal). |
+| **12** | **IPC & Networking** | ⚪ Planned | Pipes, shared memory, domain sockets, TCP/UDP sockets, non-blocking event loop. |
+| **13** | **Storage Engine** | ⚪ Planned | Educational key-value store with MemTable, Write-Ahead Log (WAL), crash recovery. |
+| **14** | **Algorithm Laboratory** | ⚪ Planned | Graph algorithms, Dynamic Programming, String algorithms, Numerical computing. |
+| **15** | **Parallel Computing** | ⚪ Planned | CPU multithreading, data parallelism, reductions, empirical Amdahl's Law validation. |
+| **16** | **CUDA / GPU Engine** | ⚪ Planned | CUDA kernels (matrix mult, reductions, prefix scan) with mandatory CPU reference fallbacks. |
+| **17** | **Performance Engineering** | ⚪ Planned | Unified benchmark framework, memory throughput profiling, speedup analysis. |
+| **18** | **Unified Runtime Integration** | ⚪ Planned | End-to-end integration: User $\to$ AI Agent $\to$ C++ Benchmark Tool $\to$ Hardware $\to$ Telemetry. |
+| **19** | **Security & Reliability** | ⚪ Planned | System sandboxing, fault injection, failover testing, sanitizer audits (ASan, TSan). |
+| **20** | **Research Experiments & Publication** | ⚪ Planned | Empirical research papers, reproducible experiment artifacts, comparative analyses. |
 
 ---
 
-## Detailed Phase Breakdown
+## Phase 0 & Phase 1 Exit Criteria
 
-### Phase 01: Project Foundation & Specification (Current)
-- **Goal:** Establish product vision, architecture principles, stack selection, initial repository structure, and runnable validation baseline.
-- **Deliverables:** `README.md`, `docs/product/specification.md`, `docs/architecture/system-architecture.md`, `ADR-001` through `ADR-004`, `.env.example`, runnable Fastify server with health checks, and initial unit/integration tests.
-- **Exit Criteria:** Zero compilation errors, all unit and integration tests passing, valid health endpoint responses.
-
-### Phase 02: Repository & Development Environment (Next Phase)
-- **Goal:** Set up developer tooling, standardized code styling, and local persistent service dependencies.
-- **Deliverables:** ESLint 9 configuration, Prettier code formatter, Docker Compose for local PostgreSQL, git hooks (Husky / lint-staged), NPM run scripts.
-- **Exit Criteria:** Single-command development environment bootstrap (`npm run dev`) with automated formatting and linting verification.
-
-### Phase 03: System Architecture Refinement
-- **Goal:** Define exact port-and-adapter interfaces for application services, domain event dispatcher, and inter-module contracts.
-- **Deliverables:** In-memory event bus abstraction, repository interfaces, modular plugin registration patterns.
-
-### Phase 04: Database & Data Model Foundation
-- **Goal:** Establish persistent data layer using PostgreSQL and Drizzle ORM.
-- **Deliverables:** Database schema definition for tenants and organizations, database migration pipeline, connection pool lifecycle, seed scripts.
-
-### Phase 05: Backend & API Foundation
-- **Goal:** Robust API plumbing with security headers, CORS, rate limiting, and automated OpenAPI documentation.
-- **Deliverables:** Helmet/CORS plugins, global rate limiting, Swagger UI interactive documentation at `/docs`.
-
-### Phase 06: Authentication & Authorization
-- **Goal:** Complete identity management and role-based access control (RBAC).
-- **Deliverables:** User registration, password hashing with Argon2id, JWT issuance/verification, refresh token rotation, permission guard middleware.
-
-### Phase 07: Core Business Modules
-- **Goal:** Implement the primary business vertical domain for NEXUS.
-- **Deliverables:** Domain entities, business validation rules, application use cases, repository implementations, CRUD endpoints.
-
-### Phase 08: Frontend & Application Shell
-- **Goal:** Create the web application presentation layer.
-- **Deliverables:** React + TypeScript + Vite single-page application, Tailwind CSS styling, responsive layout shell, theme tokens.
-
-### Phase 09: Core User Workflows
-- **Goal:** Integrate frontend shell with backend APIs for primary end-user tasks.
-- **Deliverables:** Form handling, real-time client validation, error notifications, data tables with pagination.
-
-### Phase 10: AI & Automation Capabilities
-- **Goal:** Integrate intelligent capabilities behind provider-agnostic abstractions.
-- **Deliverables:** `AiGatewayPort` implementation with Gemini/OpenAI adapter, contextual prompt management, automated classification.
-
-### Phase 11: Search, Analytics, and Intelligence
-- **Goal:** High-performance search and operational insight reporting.
-- **Deliverables:** PostgreSQL full-text search indexing, analytical aggregation queries, data export (CSV/JSON).
-
-### Phase 12: Security & Privacy Hardening
-- **Goal:** Complete security audit and privacy isolation validation.
-- **Deliverables:** Threat modeling review, CSP hardening, audit logging engine, automated secret scanning in CI.
-
-### Phase 13: Comprehensive Testing Suite
-- **Goal:** Full test coverage across the entire test pyramid.
-- **Deliverables:** Domain unit test coverage (>85%), integration tests for all API endpoints, Playwright E2E smoke tests.
-
-### Phase 14: Observability & Reliability
-- **Goal:** Deep system instrumentation for production monitoring.
-- **Deliverables:** OpenTelemetry traces, Prometheus metrics endpoint (`/metrics`), structured error alerting hooks.
-
-### Phase 15: Performance & Scalability
-- **Goal:** Measure, profile, and optimize high-traffic paths.
-- **Deliverables:** Database query analysis (`EXPLAIN ANALYZE`), index optimizations, optional Redis caching layer, k6 load test scripts.
-
-### Phase 16: Deployment & Infrastructure
-- **Goal:** Production containerization and deployment pipelines.
-- **Deliverables:** Multi-stage production Dockerfile, Kubernetes/Docker Compose deploy configs, GitHub Actions CI/CD workflows.
-
-### Phase 17: Production Hardening
-- **Goal:** Disaster recovery, high availability, and operational runbooks.
-- **Deliverables:** Backup and restore automation, secret management guidelines, disaster recovery drill procedures.
-
-### Phase 18: Documentation & Developer Portal
-- **Goal:** Complete internal and external developer documentation.
-- **Deliverables:** Architecture diagrams, API reference manuals, developer onboarding guide, contribution protocols.
-
-### Phase 19: Final System Validation
-- **Goal:** Comprehensive end-to-end verification and production release readiness.
-- **Deliverables:** Release candidate validation checklist, penetration testing review, production release signoff.
+- [x] **Constitution:** `docs/constitution.md` authored and approved.
+- [x] **Architecture:** `docs/architecture.md` detailing 3 layers and execution journey.
+- [ ] **C++ Systems Layer:** Root `CMakeLists.txt` configuring C++20, MSVC/Clang/GCC detection, CPU fallback mode (`-DTITAN_CPU_ONLY=1`), hardware probe library (`titan_systems`), and CTest unit test passing.
+- [ ] **Python AI Runtime:** `pyproject.toml`, core AI schemas, `LLMProvider` abstraction, `MockLLMProvider`, `Tool` base class, and `AgentState` enum with passing pytest suite.
+- [ ] **Multi-Language Verification:** C++, Python, and TypeScript test suites all passing with 100% pass rate.
+- [ ] **Docker & CI:** `docker-compose.yml` for PostgreSQL/Redis/API and GitHub Actions workflow.

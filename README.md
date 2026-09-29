@@ -1,250 +1,268 @@
-# NEXUS — Connected Operational Platform
+# NEXUS TITAN
 
-> **NEXUS** connects: **Users + Data + Systems + Intelligence + Automation + Workflows**
+### AI Systems, Runtime & High-Performance Computing Laboratory
 
-[![Node Version](https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg)](https://nodejs.org/)
+> **NEXUS TITAN** is an integrated engineering and research platform demonstrating how intelligent AI applications connect to the underlying computing systems that execute them.
+
+```text
+AI Application ➔ AI Runtime ➔ Backend ➔ Operating System ➔ Networking ➔ CPU ➔ Memory ➔ GPU / CUDA
+```
+
+[![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://isocpp.org/)
+[![CMake](https://img.shields.io/badge/CMake-3.25%2B-red.svg)](https://cmake.org/)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-brightgreen.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115%2B-teal.svg)](https://fastapi.tiangolo.com/)
+[![Node Version](https://img.shields.io/badge/Node-%3E%3D20.0.0-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
-[![Fastify](https://img.shields.io/badge/Fastify-5.x-black.svg)](https://www.fastify.io/)
-[![Architecture](https://img.shields.io/badge/Architecture-Modular%20Monolith-orange.svg)](#high-level-architecture)
 [![License](https://img.shields.io/badge/License-Proprietary-red.svg)](#)
 
 ---
 
 ## Table of Contents
-1. [Overview & Vision](#overview--vision)
-2. [Current Status](#current-status)
-3. [High-Level Architecture](#high-level-architecture)
-4. [Technology Stack](#technology-stack)
-5. [Repository Structure](#repository-structure)
-6. [Local Setup & Getting Started](#local-setup--getting-started)
-7. [Environment Configuration](#environment-configuration)
-8. [Development Commands](#development-commands)
-9. [Testing Strategy](#testing-strategy)
-10. [Master Roadmap](#master-roadmap)
-11. [Engineering Principles](#engineering-principles)
+1. [Core Purpose & Philosophy](#core-purpose--philosophy)
+2. [The Three-Layer Architecture](#the-three-layer-architecture)
+3. [The End-to-End Computing Journey](#the-end-to-end-computing-journey)
+4. [Engineering Constitution](#engineering-constitution)
+5. [Hardware-Aware Execution & CPU-Only Mode](#hardware-aware-execution--cpu-only-mode)
+6. [Repository Structure](#repository-structure)
+7. [Getting Started & Local Setup](#getting-started--local-setup)
+8. [Unified Verification & Testing](#unified-verification--testing)
+9. [20-Phase Master Roadmap](#20-phase-master-roadmap)
+10. [Current Status & Next Steps](#current-status--next-steps)
 
 ---
 
-## Overview & Vision
+## Core Purpose & Philosophy
 
-**NEXUS** is an enterprise-grade operational software platform designed to integrate structured enterprise data, user-driven workflows, external software systems, and intelligent automation into a unified, extensible environment.
+NEXUS TITAN answers the foundational questions bridging AI and Systems:
+* How do modern AI applications retrieve knowledge?
+* How do LLM applications securely call tools?
+* How do agents maintain explicit state?
+* How are concurrent AI workloads scheduled across CPUs and threads?
+* How do processes, memory allocators, and event loops interact with inference pipelines?
+* At what matrix dimension does GPU acceleration overcome host-to-device memory transfer overhead?
+* What is the real system bottleneck under memory-bandwidth-bound vs compute-bound workloads?
 
-Rather than fragmenting into distributed microservices prematurely or descending into an unmanageable monolithic codebase, NEXUS follows the **Modular Monolith** pattern with strict Clean Architecture boundaries (Presentation $\to$ Application $\to$ Domain $\to$ Infrastructure).
-
----
-
-## Current Status
-
-- **Active Phase:** **Phase 1 — Project Foundation & Master Specification** (Completed)
-- **Next Phase:** **Phase 2 — Repository & Development Environment**
-- **System State:** Clean, verified runnable baseline with strict TypeScript, Zod environment validation, structured Pino logging, Fastify application factory with RFC 7807 problem details, health endpoints, and automated unit/integration tests.
-
----
-
-## High-Level Architecture
-
-NEXUS enforces clean inward-pointing dependencies:
-
-```
-+-------------------------------------------------------------+
-|                     Presentation Layer                      |
-|       Fastify HTTP Routes, Controllers, RFC 7807 Errors     |
-+------------------------------+------------------------------+
-                               |
-                               v
-+------------------------------+------------------------------+
-|                     Application Layer                       |
-|           Use Cases, DTOs, Port Interfaces                  |
-+------------------------------+------------------------------+
-                               |
-                               v
-+------------------------------+------------------------------+
-|                        Domain Layer                         |
-|        Entities, Aggregates, Domain Rules & Errors          |
-+------------------------------+------------------------------+
-                               ^
-                               | implements ports
-+------------------------------+------------------------------+
-|                    Infrastructure Layer                     |
-|    PostgreSQL (Drizzle), Pino Logger, AI Adapters           |
-+-------------------------------------------------------------+
+### Foundational Principles
+```text
+CORRECTNESS ➔ MEASUREMENT ➔ REPRODUCIBILITY ➔ SECURITY ➔ PERFORMANCE ➔ EXPLAINABILITY
 ```
 
-Key architectural standards:
-- **API-First Design**: Uniform RESTful JSON interfaces with standardized RFC 7807 Problem Details for all errors.
-- **Port-and-Adapter Isolation**: Database adapters, external service integrations, and future AI providers sit strictly behind application port interfaces.
-- **Multi-Tenancy Readiness**: Baseline shared-database isolation using `tenant_id` scoping and PostgreSQL Row-Level Security, with a decoupled repository pattern allowing schema-per-tenant upgrades.
+---
 
-See the complete architectural design in [docs/architecture/system-architecture.md](docs/architecture/system-architecture.md).
+## The Three-Layer Architecture
+
+NEXUS TITAN is structured into three connected domains:
+
+### 1. Layer A — NEXUS (Intelligent Application Layer)
+* **Stack:** Python (FastAPI, Pydantic) & TypeScript (React / Next.js)
+* **Capabilities:** Central AI Runtime, LLM Provider Abstraction (Remote, Local, and Transparent Mock), RAG Pipeline, Controlled Tool Registry with approval gates, Finite State Machine Agents, AI Security, and MLOps tracking.
+
+### 2. Layer B — TITAN (Systems Infrastructure Layer)
+* **Stack:** Modern C++ (C++20), CMake, Ninja, MSVC / Clang / GCC
+* **Capabilities:** Process manager & supervisor (`fork`, `exec`, signals), production thread pool with bounded queue, CPU scheduling simulator (FCFS, SJF, RR, MLFQ), custom memory allocator (fragmentation metrics), virtual memory simulator, non-blocking networking, and key-value storage engine with Write-Ahead Logging (WAL).
+
+### 3. Layer C — QUANTUM COMPUTE (High-Performance Computing Layer)
+* **Stack:** C++20 Multithreading / SIMD & CUDA (with CPU reference fallbacks)
+* **Capabilities:** Algorithm laboratory (Graph, Dynamic Programming, Numerical computing), parallel computing benchmarks (Amdahl's law validation), CUDA kernels (GEMM, reductions, prefix scan), and unified benchmark framework.
 
 ---
 
-## Technology Stack
+## The End-to-End Computing Journey
 
-| Layer / Concern | Technology | Selection Justification |
-|---|---|---|
-| **Runtime** | **Node.js 22 LTS** | Industry-standard async runtime with native ESM and top performance. |
-| **Language** | **TypeScript 5.x** | End-to-end static typing, compile-time safety, zero-cost abstractions. |
-| **HTTP Framework** | **Fastify 5.x** | High throughput, native JSON schema validation, encapsulated plugin design. |
-| **Logging** | **Pino 9.x** | Blazingly fast, structured JSON logging with correlation ID tracing. |
-| **Validation** | **Zod 3.x** | Defensive schema validation for config, incoming requests, and boundaries. |
-| **Testing** | **Vitest 3.x** | Fast, zero-config ESM and TypeScript test runner with built-in mocking. |
-| **Database Target** | **PostgreSQL + Drizzle ORM** | Type-safe SQL queries, explicit migrations, zero runtime overhead (Phase 4+). |
+```text
+                         USER
+                           │
+                           ▼
+                    WEB APPLICATION
+                           │
+                           ▼
+                      API SERVER
+                           │
+                  AI ORCHESTRATOR
+                           │
+          ┌────────────────┼────────────────┐
+          ▼                ▼                ▼
+       RAG Engine     Tool System     Agent Runtime
+          │                │                │
+          └────────────────┼────────────────┘
+                           ▼
+                      LLM GATEWAY
+                           │
+                ┌──────────┴──────────┐
+                ▼                     ▼
+           Model Provider        Local Model
+                                      │
+                                      ▼
+                               Inference Runtime
+                                      │
+                         ┌────────────┴────────────┐
+                         ▼                         ▼
+                       CPU                       GPU
+                         │                         │
+                         ▼                         ▼
+                   SYSTEM RUNTIME             CUDA ENGINE
+                         │
+              ┌──────────┼──────────┐
+              ▼          ▼          ▼
+          Processes    Memory    Network
+              │          │          │
+              └──────────┼──────────┘
+                         ▼
+                     STORAGE
+```
 
-See Architecture Decision Records for details:
-- [ADR-001: Modular Monolith Architecture](docs/decisions/ADR-001-modular-monolith-architecture.md)
-- [ADR-002: Technology Stack Selection](docs/decisions/ADR-002-technology-stack-selection.md)
-- [ADR-003: Multi-Tenancy Strategy](docs/decisions/ADR-003-data-isolation-strategy.md)
-- [ADR-004: Standardized Error Handling](docs/decisions/ADR-004-standardized-error-handling.md)
+---
+
+## Engineering Constitution
+
+NEXUS TITAN strictly adheres to the [Engineering Constitution](docs/constitution.md):
+1. **No Fake Performance:** Every metric must be measured directly on host hardware executing real code. No unsubstantiated claims (e.g. "10x faster") are permitted.
+2. **No Fake AI:** Models must execute real inference; offline/test environments utilize transparent mock providers explicitly tagged `[MOCK_PROVIDER / DEMO_MODE]`.
+3. **No Unsafe System Access:** Agents never receive unrestricted host shell, filesystem, or network access. Mutating tools enforce permission checks and human approval gates.
+4. **Hardware-Aware Execution:** Systems compile and run with 100% functionality on CPU-only machines. GPU features degrade gracefully with explicit `cuda_available: false` telemetry.
+5. **Reproducibility:** Benchmarks log input size, hardware specs, thread counts, speedups, and git commit hashes.
+
+---
+
+## Hardware-Aware Execution & CPU-Only Mode
+
+The platform dynamically interrogates host hardware at startup using the native C++ `titan::HardwareProbe`.
+
+* When CUDA hardware and `nvcc` are present: The CUDA engine compiles and GPU benchmarks run with CPU equivalence verification.
+* When CUDA is absent (such as CPU-only development environments): CMake automatically configures `-DTITAN_CPU_ONLY=1`. The system executes CPU reference implementations, and telemetry honestly reports:
+  ```text
+  Hardware: CPU-Only Mode (No GPU Detected)
+  CUDA Available: NO (CPU Fallback Active)
+  ```
 
 ---
 
 ## Repository Structure
 
-```
+```text
 nexus/
-├── .env.example                # Documented environment variable template
-├── .gitignore                  # Git ignore rules for node, dist, and secrets
-├── package.json                # Project dependencies and script runner
-├── tsconfig.json               # Strict TypeScript configuration (NodeNext)
-├── vitest.config.ts            # Vitest unit & integration test runner config
+├── CMakeLists.txt              # Root C++20 CMake configuration
+├── docker-compose.yml          # Container stack (Postgres, Redis, API, Web)
+├── pyproject.toml              # Python package & pytest configuration
+├── package.json                # TypeScript & web dependencies
+├── tsconfig.json               # TypeScript configuration
+├── vitest.config.ts            # Vitest unit & integration test runner
+├── .env.example                # Unified environment variables
 ├── README.md                   # This project manual
-├── docs/                       # Project documentation
-│   ├── architecture/           # System architecture specifications
-│   │   └── system-architecture.md
-│   ├── decisions/              # Architecture Decision Records (ADRs)
-│   │   ├── ADR-001-modular-monolith-architecture.md
-│   │   ├── ADR-002-technology-stack-selection.md
-│   │   ├── ADR-003-data-isolation-strategy.md
-│   │   └── ADR-004-standardized-error-handling.md
-│   ├── product/                # Product discovery & specifications
-│   │   └── specification.md
-│   └── roadmap.md              # 19-phase master implementation roadmap
-├── src/                        # Application source code
-│   ├── config/                 # Environment validation via Zod
-│   │   └── index.ts
-│   ├── domain/                 # Domain models, errors, and pure business rules
-│   │   └── errors/
-│   │       └── index.ts
-│   ├── application/            # Application use cases, ports, and DTOs (Phase 3+)
-│   ├── infrastructure/         # Logger, database adapters, external clients
-│   │   └── logging/
-│   │       └── logger.ts
-│   ├── presentation/           # HTTP controllers, Fastify app factory, routes
-│   │   └── http/
-│   │       ├── app.ts
-│   │       └── routes/
-│   │           ├── health.ts
-│   │           └── api.ts
-│   └── index.ts                # Application bootstrap and graceful shutdown
+│
+├── apps/                       # Application entry points
+│   ├── api/                    # FastAPI backend service (main.py)
+│   └── web/                    # Presentation shell
+│
+├── ai/                         # Layer A: AI Application Infrastructure
+│   ├── runtime/                # Central AI Runtime (core.py, schema.py)
+│   ├── llm/                    # Provider abstraction (base.py, mock.py)
+│   ├── tools/                  # Controlled tools & registry (base.py, registry.py)
+│   ├── agents/                 # State machine & lifecycle (state.py)
+│   ├── rag/                    # RAG engine foundation
+│   ├── evaluation/             # Retrieval & grounding metrics
+│   ├── security/               # Prompt injection defense
+│   └── mlops/                  # Experiment tracking
+│
+├── systems/                    # Layer B: TITAN Systems Infrastructure (C++20)
+│   ├── CMakeLists.txt          # Systems layer CMake build target
+│   └── runtime/                # Hardware probe & telemetry
+│       ├── include/titan/      # C++ headers (hardware_probe.hpp)
+│       ├── src/                # C++ source (hardware_probe.cpp)
+│       └── tests/              # CTest test suite (test_hardware_probe.cpp)
+│
+├── algorithms/                 # Layer C: Algorithm Laboratory
+├── cuda/                       # Layer C: CUDA & CPU Fallback Kernels
+├── benchmarks/                 # Unified Benchmark Framework
+├── experiments/                # Research Experiment Framework
+├── datasets/                   # Test datasets and evaluation benchmarks
+├── docs/                       # Specifications & records
+│   ├── constitution.md         # Inviolable Engineering Constitution
+│   ├── architecture.md         # Master System Architecture
+│   └── roadmap.md              # 20-Phase Master Roadmap
+├── infrastructure/             # Dockerfiles & deployment
+│   └── docker/
+│       ├── Dockerfile.api
+│       └── Dockerfile.web
+├── scripts/                    # Build & verification automation
+│   ├── build_systems.ps1       # CMake build & CTest runner
+│   ├── build_systems.bat       # Native MSVC / Ninja batch builder
+│   └── run_checks.ps1          # Unified quality runner across all 3 stacks
 └── tests/                      # Automated test suite
-    ├── unit/                   # Isolated unit tests
-    │   ├── config.test.ts
-    │   └── errors.test.ts
-    └── integration/            # HTTP and component integration tests
-        └── health.test.ts
+    ├── ai/                     # Python AI tests (pytest)
+    ├── systems/                # Systems tests
+    └── integration/            # HTTP integration tests (vitest)
 ```
 
 ---
 
-## Local Setup & Getting Started
+## Getting Started & Local Setup
 
 ### Prerequisites
-- **Node.js**: `v20.0.0` or later (tested on `v22.19.0`)
-- **npm**: `v10.0.0` or later
+* **C++ Compiler:** Visual Studio 2022 Community (MSVC `cl.exe`) or GCC 12+ / Clang 15+
+* **Build System:** CMake 3.25+ and Ninja
+* **Python:** Python 3.12+ (tested on Python 3.14)
+* **Node.js:** Node.js 20+ (tested on Node.js 22 LTS)
 
-### Installation
+### Quickstart
 
-1. **Clone the repository:**
+1. **Clone and Setup:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Ft-sumukh/nexus.git
    cd nexus
    ```
 
-2. **Install dependencies:**
-   ```bash
-   npm install
+2. **Run Unified Verification:**
+   On Windows (PowerShell):
+   ```powershell
+   .\scripts\run_checks.ps1
    ```
 
-3. **Configure the environment:**
-   ```bash
-   cp .env.example .env
+3. **Build C++ Systems Layer Independently:**
+   ```powershell
+   .\scripts\build_systems.ps1
    ```
 
-4. **Verify installation by running tests:**
+4. **Run Python AI Runtime Tests:**
+   ```bash
+   python -m pytest tests/ai -v
+   ```
+
+5. **Run TypeScript Tests:**
    ```bash
    npm test
    ```
 
-5. **Start the development server:**
+6. **Start Local Docker Services (PostgreSQL + Redis):**
    ```bash
-   npm run dev
+   docker compose up -d postgres redis
    ```
 
-The server will be reachable at `http://localhost:3000`.
-
 ---
 
-## Environment Configuration
+## 20-Phase Master Roadmap
 
-All runtime configuration is managed through environment variables and validated at startup using Zod. See `.env.example` for full options:
+* [x] **Phase 00:** Engineering Constitution (`docs/constitution.md`)
+* [x] **Phase 01:** Repository & Development Foundation (C++20, Python, TS, CMake, CI)
+* [ ] **Phase 02:** AI Runtime Foundation
+* [ ] **Phase 03:** LLM Gateway
+* [ ] **Phase 04:** RAG Engine
+* [ ] **Phase 05:** Tool Calling & Agent Runtime
+* [ ] **Phase 06:** AI Evaluation
+* [ ] **Phase 07:** AI Security
+* [ ] **Phase 08:** MLOps Infrastructure
+* [ ] **Phase 09:** Process & Thread Runtime
+* [ ] **Phase 10:** CPU Scheduling & Synchronization
+* [ ] **Phase 11:** Memory & Virtual Memory
+* [ ] **Phase 12:** IPC & Networking
+* [ ] **Phase 13:** Storage Engine
+* [ ] **Phase 14:** Algorithm Laboratory
+* [ ] **Phase 15:** Parallel Computing
+* [ ] **Phase 16:** CUDA / GPU Engine
+* [ ] **Phase 17:** Performance Engineering
+* [ ] **Phase 18:** Unified Runtime Integration
+* [ ] **Phase 19:** Security & Reliability
+* [ ] **Phase 20:** Research Experiments & Publication
 
-| Variable | Default | Description |
-|---|---|---|
-| `NODE_ENV` | `development` | Runtime environment (`development`, `test`, `production`, `staging`). |
-| `PORT` | `3000` | HTTP port the server listens on. |
-| `HOST` | `0.0.0.0` | Network binding interface. |
-| `LOG_LEVEL` | `info` | Pino logging level (`debug`, `info`, `warn`, `error`). |
-| `CORS_ORIGIN` | `*` | Allowed CORS origin. |
-| `SESSION_SECRET` | *(dev fallback)* | Secret used for cookie sessions (min 16 chars). |
-| `JWT_SECRET` | *(dev fallback)* | Secret used for token verification (min 16 chars). |
-
----
-
-## Development Commands
-
-| Command | Action |
-|---|---|
-| `npm run dev` | Starts server in development mode with live watch/reload via `tsx`. |
-| `npm run build` | Compiles TypeScript source files into `dist/`. |
-| `npm start` | Runs the compiled production build from `dist/index.js`. |
-| `npm test` | Runs all unit and integration tests with Vitest. |
-| `npm run test:watch` | Runs Vitest in interactive watch mode. |
-| `npm run test:coverage`| Executes the test suite and generates code coverage report. |
-| `npm run typecheck` | Validates TypeScript types across the project without emitting files. |
-
----
-
-## Testing Strategy
-
-NEXUS enforces automated testing at every phase:
-- **Unit Tests (`tests/unit/`)**: Validates domain logic, error schemas, and config parsing in complete isolation.
-- **Integration Tests (`tests/integration/`)**: Validates HTTP routes, request injection, headers, status codes, and database interaction.
-- **Run Tests**:
-  ```bash
-  npm test
-  ```
-
----
-
-## Master Roadmap
-
-Development proceeds sequentially through 19 phases. Key milestones:
-- **Phase 01:** Foundation & Master Specification *(Completed)*
-- **Phase 02:** Repository & Development Environment *(Next)*
-- **Phase 04:** Database & Data Model Foundation
-- **Phase 06:** Authentication & Authorization
-- **Phase 07:** Core Business Modules
-- **Phase 08:** Frontend & Application Shell
-- **Phase 10:** AI & Automation Capabilities
-
-Review the full roadmap in [docs/roadmap.md](docs/roadmap.md).
-
----
-
-## Engineering Principles
-
-1. **Correctness $\to$ Security $\to$ Maintainability $\to$ Simplicity $\to$ Performance $\to$ Scale**
-2. **Never skip foundational work.**
-3. **No premature abstractions or speculative features.**
-4. **Always verify:** Code is not complete until compiled, executed, and tested.
+See [docs/roadmap.md](docs/roadmap.md) for detailed deliverables and exit criteria.
