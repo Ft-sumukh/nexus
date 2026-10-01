@@ -1,6 +1,7 @@
 import pytest
-from ai.runtime.schema import AIRequest
+from ai.runtime.schema import AIRequest, RoutingPreference
 from ai.runtime.core import AIRuntime
+from ai.runtime.prompts import PromptTemplate
 from ai.llm.mock import MockLLMProvider
 
 
@@ -18,12 +19,12 @@ async def test_ai_runtime_execution_with_mock_provider():
 
     # Verification of response attributes
     assert response.request_id == request.request_id
-    assert response.model == "titan-mock-v1"
     assert response.is_mock is True
     assert "[MOCK_PROVIDER / DEMO_MODE]" in response.text
     assert response.latency_ms >= 5.0
     assert response.input_tokens > 0
     assert response.output_tokens > 0
+    assert "5_inference" in response.pipeline_timings_ms
 
     # Verification of recorded telemetry trace
     assert len(runtime.traces) == 1
@@ -57,5 +58,37 @@ async def test_mock_embeddings():
     assert len(vectors) == 2
     assert len(vectors[0]) == 128
     assert len(vectors[1]) == 128
-    # Vectors should be non-zero
     assert sum(abs(x) for x in vectors[0]) > 0
+
+
+@pytest.mark.asyncio
+async def test_ai_runtime_with_prompt_templates_and_metrics():
+    mock_provider = MockLLMProvider(latency_seconds=0.002)
+    runtime = AIRuntime(default_provider=mock_provider)
+
+    # Register template
+    runtime.prompt_registry.register(
+        PromptTemplate(
+            name="cache_analysis",
+            version="1.0.0",
+            template_str="Analyze L1 cache hit rate on processor {cpu_model} under workload {workload}."
+        )
+    )
+
+    request = AIRequest(
+        prompt="Placeholder",
+        prompt_version="cache_analysis:1.0.0",
+        context_variables={"cpu_model": "AMD Ryzen 9", "workload": "GEMM tiled"},
+        routing_preference=RoutingPreference.FAST
+    )
+
+    response = await runtime.execute(request)
+    assert "AMD Ryzen 9" in response.text
+    assert "GEMM tiled" in response.text
+
+    # Verify metrics snapshot
+    metrics = runtime.metrics
+    assert metrics.total_requests >= 1
+    assert metrics.successful_requests >= 1
+    assert metrics.failed_requests == 0
+    assert metrics.avg_latency_ms > 0

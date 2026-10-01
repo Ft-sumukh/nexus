@@ -33,7 +33,7 @@ class MockLLMProvider(LLMProvider):
         # Transparent mock notification prefix
         mock_output = (
             f"[MOCK_PROVIDER / DEMO_MODE] Model '{request.model}' processed prompt: "
-            f"'{request.prompt[:60]}...' (deterministic test output)"
+            f"'{request.prompt[:200]}...' (deterministic test output)"
         )
         
         # Approximate token counts based on whitespace splitting

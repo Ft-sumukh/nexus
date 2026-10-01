@@ -544,8 +544,12 @@ nexus/
 │   │   └── __init__.py                        # RAG foundation stub
 │   ├── runtime/
 │   │   ├── __init__.py
-│   │   ├── core.py                            # Central AIRuntime orchestrator
-│   │   └── schema.py                          # AIRequest, AIResponse, TelemetryTrace schemas
+│   │   ├── core.py                            # Central AIRuntime orchestrator (7-stage pipeline)
+│   │   ├── pipeline.py                        # 7-Stage execution pipeline with fallback handling
+│   │   ├── prompts.py                         # Semantic prompt templates & registry
+│   │   ├── router.py                          # Capability-based & fallback model routing
+│   │   ├── schema.py                          # AIRequest, AIResponse, TelemetryTrace schemas
+│   │   └── telemetry.py                       # In-memory, file, and composite telemetry sinks
 │   ├── security/
 │   │   └── __init__.py                        # AI Security foundation stub
 │   └── tools/
@@ -585,6 +589,11 @@ nexus/
 │   ├── ai/
 │   │   ├── test_agent_state.py                # Agent state machine transitions test
 │   │   ├── test_ai_runtime.py                 # AI runtime telemetry & mock tests
+│   │   ├── test_api_endpoints.py              # FastAPI runtime & telemetry endpoints test
+│   │   ├── test_pipeline.py                   # 7-stage pipeline execution & fallback test
+│   │   ├── test_prompts.py                    # Semantic prompt templates & registry test
+│   │   ├── test_router.py                     # Capability-based & fallback router test
+│   │   ├── test_telemetry.py                  # Structured telemetry sinks & P95 metrics test
 │   │   └── test_tools.py                      # Tool registration & approval gate tests
 │   ├── integration/
 │   │   └── health.test.ts                     # HTTP integration & RFC 7807 tests
@@ -593,6 +602,7 @@ nexus/
 │       └── errors.test.ts                     # Domain error hierarchy tests
 │
 ├── docs/                                      # Project specifications & records
+│   ├── ai-runtime.md                          # Phase 2 AI Runtime architecture & lifecycle spec
 │   ├── architecture.md                        # Master system architecture document
 │   ├── constitution.md                        # Inviolable Engineering Constitution
 │   ├── roadmap.md                             # 20-phase master development roadmap
@@ -702,7 +712,11 @@ Available endpoints:
 * `GET http://localhost:8000/health` — Service health status
 * `GET http://localhost:8000/telemetry/hardware` — Invokes C++ hardware probe and returns host metrics
 * `GET http://localhost:8000/ai/v1/tools` — Lists registered tools, schemas, and approval requirements
-* `POST http://localhost:8000/ai/v1/runtime/execute` — Submits a prompt to the central AI runtime
+* `POST http://localhost:8000/ai/v1/runtime/execute` — Submits a prompt to the central 7-stage AI runtime
+* `GET http://localhost:8000/ai/v1/models` — Lists registered models, capabilities, and active routing table
+* `GET http://localhost:8000/ai/v1/prompts` — Lists registered semantic prompt templates and versions
+* `GET http://localhost:8000/ai/v1/runtime/traces` — Queries telemetry trace history (with optional request_id filter)
+* `GET http://localhost:8000/ai/v1/runtime/metrics` — Aggregate runtime metrics (mean latency, P95 latency, error count)
 
 ### Running the TypeScript Presentation Service (Port 3000)
 ```bash
@@ -747,7 +761,7 @@ docker compose down
 
 ## Automated Verification & Test Suites
 
-NEXUS TITAN maintains automated test suites across all three language ecosystems. Currently, **24 automated tests are implemented and passing with a 100% pass rate**:
+NEXUS TITAN maintains automated test suites across all three language ecosystems. Currently, **43 automated tests are implemented and passing with a 100% pass rate**:
 
 ```text
 =============================================================================
@@ -755,11 +769,11 @@ NEXUS TITAN maintains automated test suites across all three language ecosystems
 =============================================================================
   Language / Framework       Suite                   Tests Passed    Duration
 -----------------------------------------------------------------------------
-  C++20 (MSVC / CTest)       test_hardware_probe     1 / 1 (100%)    0.03s
-  Python 3 (pytest)          tests/ai/               9 / 9 (100%)    0.10s
-  TypeScript (Vitest / tsc)  tests/unit/ & integr/   14 / 14 (100%)  1.69s
+  C++20 (MSVC / CTest)       test_hardware_probe     1 / 1 (100%)    0.08s
+  Python 3 (pytest)          tests/ai/               28 / 28 (100%)  0.53s
+  TypeScript (Vitest / tsc)  tests/unit/ & integr/   14 / 14 (100%)  1.70s
 -----------------------------------------------------------------------------
-  TOTAL VERIFIED TESTS                               24 / 24 (100%)  < 2.0s
+  TOTAL VERIFIED TESTS                               43 / 43 (100%)  < 2.5s
 =============================================================================
 ```
 
@@ -788,11 +802,30 @@ tests/ai/test_agent_state.py::test_terminal_states_prevent_further_transitions P
 tests/ai/test_ai_runtime.py::test_ai_runtime_execution_with_mock_provider PASSED
 tests/ai/test_ai_runtime.py::test_ai_runtime_streaming PASSED
 tests/ai/test_ai_runtime.py::test_mock_embeddings PASSED
+tests/ai/test_ai_runtime.py::test_ai_runtime_metrics_aggregation PASSED
+tests/ai/test_api_endpoints.py::test_models_endpoint PASSED
+tests/ai/test_api_endpoints.py::test_prompts_endpoint PASSED
+tests/ai/test_api_endpoints.py::test_runtime_traces_and_metrics_endpoints PASSED
+tests/ai/test_pipeline.py::test_pipeline_stage_ordering PASSED
+tests/ai/test_pipeline.py::test_pipeline_validation_rejection PASSED
+tests/ai/test_pipeline.py::test_pipeline_fallback_on_inference_failure PASSED
+tests/ai/test_prompts.py::test_prompt_template_variable_extraction PASSED
+tests/ai/test_prompts.py::test_prompt_template_render_and_missing_var_error PASSED
+tests/ai/test_prompts.py::test_prompt_registry_registration_and_retrieval PASSED
+tests/ai/test_prompts.py::test_prompt_registry_version_not_found PASSED
+tests/ai/test_router.py::test_router_exact_match PASSED
+tests/ai/test_router.py::test_router_capability_match PASSED
+tests/ai/test_router.py::test_router_fallback_when_preferred_unavailable PASSED
+tests/ai/test_router.py::test_router_fallback_on_failure PASSED
+tests/ai/test_router.py::test_router_no_candidate_raises PASSED
+tests/ai/test_telemetry.py::test_in_memory_telemetry_sink PASSED
+tests/ai/test_telemetry.py::test_file_telemetry_sink PASSED
+tests/ai/test_telemetry.py::test_runtime_metrics_aggregator PASSED
 tests/ai/test_tools.py::test_tool_registry_and_execution PASSED
 tests/ai/test_tools.py::test_mutating_tool_approval_gate PASSED
 tests/ai/test_tools.py::test_invalid_parameters_fail_validation PASSED
 
-============================== 9 passed in 0.10s ==============================
+============================= 28 passed in 0.53s ==============================
 ```
 
 ### 3. Running TypeScript Tests
@@ -879,7 +912,7 @@ NEXUS TITAN progresses systematically through 20 phases. Current verified status
 
 * [x] **Phase 00 — Engineering Constitution:** Codified the 6 inviolable laws in [`docs/constitution.md`](file:///d:/week/nexus/docs/constitution.md).
 * [x] **Phase 01 — Repository & Development Foundation:** Multi-language repository (C++20, Python, TypeScript), CMake build system, C++ Hardware Probe, Python AI Runtime & Mock Provider, Tool Registry with approval gates, Agent State Machine, Docker Compose, CI workflow, and passing tests.
-* [ ] **Phase 02 — AI Runtime Foundation:** Advanced request context pipelines, streaming backpressure, model routing policies, and persistent trace logging.
+* [x] **Phase 02 — AI Runtime Foundation:** 7-stage execution pipeline, ModelRouter (rule/capability/fallback), PromptRegistry with semantic versioning, and InMemory/File/Composite Telemetry sinks with P95 latency tracking.
 * [ ] **Phase 03 — LLM Gateway:** Remote provider adapters (OpenAI, Anthropic, Gemini) and local llama.cpp / Ollama integration.
 * [ ] **Phase 04 — RAG Engine:** Document ingestion, chunking strategies, pgvector storage, hybrid retrieval (BM25 + vector), reranker, and citation engine.
 * [ ] **Phase 05 — Tool Calling & Agent Runtime:** Multi-step autonomous planning loops, budget limits, execution timeouts, and memory state.
@@ -908,7 +941,7 @@ NEXUS TITAN progresses systematically through 20 phases. Current verified status
 | **Phase 0 Constitution** | ✅ Complete | [`docs/constitution.md`](file:///d:/week/nexus/docs/constitution.md) approved |
 | **Phase 1 Repository** | ✅ Complete | Multi-language tree, CMake, Python packaging, Docker, CI |
 | **Systems Runtime (C++)** | 🟡 Active Foundation | C++20 Hardware Probe tested & passing in CTest (0.03s) |
-| **AI Runtime (Python)** | 🟡 Active Foundation | Schemas, AIRuntime, MockLLMProvider, Tools, Agent State tested in pytest (0.10s) |
+| **AI Runtime (Python)** | ✅ Complete (Phase 2) | 7-Stage Pipeline, ModelRouter, PromptRegistry, Telemetry sinks tested in pytest (0.53s) |
 | **Presentation (TS)** | 🟡 Active Foundation | Fastify, RFC 7807 errors, Zod config tested in Vitest (1.69s) |
 | **LLM Gateway** | 🟡 Mock Implemented | Mock provider working; live remote providers in Phase 3 |
 | **RAG Subsystem** | 📋 Planned | Architecture designed; implementation in Phase 4 |

@@ -1,7 +1,7 @@
 # NEXUS TITAN — 20-Phase Master Development Roadmap
 
 **Project:** NEXUS TITAN — AI Systems, Runtime & High-Performance Computing Laboratory  
-**Current Active Phase:** Phase 1 — Repository & Development Foundation  
+**Current Active Phase:** Phase 3 — LLM Gateway  
 
 ---
 
@@ -10,9 +10,9 @@
 | Phase # | Phase Title | Status | Scope & Deliverables |
 |---|---|---|---|
 | **00** | **Engineering Constitution** | 🟢 Completed | Core principles (No Fake Performance, No Fake AI, CPU fallback, safety, measurement). |
-| **01** | **Repository & Development Foundation** | 🟡 In Progress | Multi-language monorepo (C++20, Python, TypeScript), CMake, Docker, hardware probe, CI. |
-| **02** | **AI Runtime Foundation** | ⚪ Planned | Central AI Runtime, request schemas, telemetry pipeline, token & latency tracking. |
-| **03** | **LLM Gateway** | ⚪ Planned | Provider abstraction (Remote, Local, Mock), model routing, streaming interfaces. |
+| **01** | **Repository & Development Foundation** | 🟢 Completed | Multi-language monorepo (C++20, Python, TypeScript), CMake, Docker, hardware probe, CI. |
+| **02** | **AI Runtime Foundation** | 🟢 Completed | 7-stage sequential pipeline, capability & fallback ModelRouter, PromptRegistry, InMemory/File/Composite Telemetry, P95 metrics. |
+| **03** | **LLM Gateway** | 🟡 Next Active Phase | Provider abstraction (Remote, Local, Mock), model routing, streaming interfaces. |
 | **04** | **RAG Engine** | ⚪ Planned | Ingestion, chunking, embeddings, hybrid retrieval (BM25 + vector), reranker, citations. |
 | **05** | **Tool Calling & Agent Runtime** | ⚪ Planned | Explicit agent state machine, tool permissions, execution loop, human-in-the-loop. |
 | **06** | **AI Evaluation** | ⚪ Planned | Retrieval benchmarks (Recall@K, MRR, nDCG), groundedness checks, hallucination scoring. |
@@ -33,11 +33,22 @@
 
 ---
 
-## Phase 0 & Phase 1 Exit Criteria
+## Phase Exit Criteria
 
+### Phase 00: Engineering Constitution
 - [x] **Constitution:** `docs/constitution.md` authored and approved.
 - [x] **Architecture:** `docs/architecture.md` detailing 3 layers and execution journey.
-- [ ] **C++ Systems Layer:** Root `CMakeLists.txt` configuring C++20, MSVC/Clang/GCC detection, CPU fallback mode (`-DTITAN_CPU_ONLY=1`), hardware probe library (`titan_systems`), and CTest unit test passing.
-- [ ] **Python AI Runtime:** `pyproject.toml`, core AI schemas, `LLMProvider` abstraction, `MockLLMProvider`, `Tool` base class, and `AgentState` enum with passing pytest suite.
-- [ ] **Multi-Language Verification:** C++, Python, and TypeScript test suites all passing with 100% pass rate.
-- [ ] **Docker & CI:** `docker-compose.yml` for PostgreSQL/Redis/API and GitHub Actions workflow.
+
+### Phase 01: Repository & Development Foundation
+- [x] **C++ Systems Layer:** Root `CMakeLists.txt` configuring C++20, MSVC/Clang/GCC detection, CPU fallback mode (`-DTITAN_CPU_ONLY=1`), hardware probe library (`titan_systems`), and CTest unit test passing.
+- [x] **Python AI Runtime:** `pyproject.toml`, core AI schemas, `LLMProvider` abstraction, `MockLLMProvider`, `Tool` base class, and `AgentState` enum with passing pytest suite.
+- [x] **Multi-Language Verification:** C++, Python, and TypeScript test suites all passing with 100% pass rate.
+- [x] **Docker & CI:** `docker-compose.yml` for PostgreSQL/Redis/API and GitHub Actions workflow.
+
+### Phase 02: AI Runtime Foundation
+- [x] **7-Stage Execution Pipeline:** Sequential pipeline (`Validation` → `Routing` → `Context` → `Tools` → `Inference` → `OutputValidation` → `Telemetry`) with fallback handling and per-stage latency measurement.
+- [x] **Model Router:** Rule-based and capability-based routing (`FAST`, `COMPLEX_REASONING`, `LOCAL_PRIVATE`) with automated provider fallback.
+- [x] **Prompt Registry:** Semantic versioned templates with variable extraction and validation.
+- [x] **Structured Telemetry:** `InMemoryTelemetrySink`, `FileTelemetrySink` (JSONL), and `RuntimeMetricsAggregator` tracking mean and P95 latency.
+- [x] **REST API Endpoints:** `/ai/v1/models`, `/ai/v1/prompts`, `/ai/v1/runtime/traces`, `/ai/v1/runtime/metrics`.
+- [x] **Testing & Documentation:** 28 passing pytest unit tests and comprehensive `docs/ai-runtime.md` specification.
